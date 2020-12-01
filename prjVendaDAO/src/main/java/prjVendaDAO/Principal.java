@@ -13,7 +13,7 @@ public class Principal {
 
 		EntityManager em = emf.createEntityManager();
 
-		String descricaoOpcao = "1 - Cadastrar \n" + "2 - Editar\n" + "3 - Remover\n" + "4 - Sair";
+		String descricaoOpcao = "1 - Cadastrar \n" + "2 - Editar\n" + "3 - Remover\n" + "4 - Consultar\n" + "5 - Sair";
 
 		int opcao = Integer.parseInt(JOptionPane.showInputDialog(descricaoOpcao));
 
@@ -25,13 +25,13 @@ public class Principal {
 
 			try {
 
-				Produto p = new Produto();
-				p.setDescricao(descricao);
-				p.setValor(Double.parseDouble(valor));
-				p.setValorCompra(Double.parseDouble(valorCompra));
+				Produto produtoNovo = new Produto();
+				produtoNovo.setDescricao(descricao);
+				produtoNovo.setValor(Double.parseDouble(valor));
+				produtoNovo.setValorCompra(Double.parseDouble(valorCompra));
 
 				em.getTransaction().begin();
-				em.persist(p);
+				em.persist(produtoNovo);
 				em.getTransaction().commit();
 
 				JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
@@ -43,8 +43,9 @@ public class Principal {
 			break;
 
 		case 2:
-			int idProdutoEditar = Integer.parseInt(JOptionPane.showInputDialog("Informe o id do produto que deseja editar"));
-			
+			int idProdutoEditar = Integer
+					.parseInt(JOptionPane.showInputDialog("Informe o id do produto que deseja editar"));
+
 			try {
 
 				Produto produtoEditado = em.find(Produto.class, idProdutoEditar);
@@ -70,7 +71,8 @@ public class Principal {
 			break;
 
 		case 3:
-			int idProdutoExcluir = Integer.parseInt(JOptionPane.showInputDialog("Informe o id do produto que deseja excluir"));
+			int idProdutoExcluir = Integer
+					.parseInt(JOptionPane.showInputDialog("Informe o id do produto que deseja excluir"));
 
 			try {
 
@@ -87,6 +89,28 @@ public class Principal {
 			break;
 
 		case 4:
+			int idProdutoConsultar = Integer
+					.parseInt(JOptionPane.showInputDialog("Informe o id do produto que deseja consultar"));
+
+			try {
+
+				Produto produtoConsultar = em.find(Produto.class, idProdutoConsultar);
+				em.detach(produtoConsultar);
+
+				em.getTransaction().begin();
+				em.getTransaction().commit();
+
+				JOptionPane.showMessageDialog(null,
+						"ID do produto: " + produtoConsultar.getId() + 
+						"\nNome do produto: " + produtoConsultar.getDescricao() + 
+						"\nValor: R$ " + produtoConsultar.getValor() +
+						"\nValor de compra: R$ " + produtoConsultar.getValorCompra());
+
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Erro ao consultar o produto! Verifique o id e tente novamente.");
+			}
+
+		case 5:
 			JOptionPane.showMessageDialog(null, "Obrigado e volte sempre.");
 			break;
 
